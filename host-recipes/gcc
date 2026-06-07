@@ -3,18 +3,26 @@
 name=gcc
 from_source=gcc
 revision=1
-hostrundeps="binutils"
 imagedeps="build-essential libgmp-dev libmpc-dev libmpfr-dev"
+hostdeps="pkg-config"
+hostrundeps="binutils"
 deps="glibc"
 
 configure() {
-    "${source_dir}"/configure               \
-            --prefix="${prefix}"            \
-            --target="${TRIPLE}"            \
-            --with-sysroot="${sysroot_dir}" \
-            --disable-nls                   \
-            --enable-languages=c,c++        \
-            --enable-default-pie
+        CFLAGS="$HOST_CFLAGS"                   \
+        CXXFLAGS="$HOST_CXXFLAGS"               \
+        LDFLAGS="$HOST_LDFLAGS"                 \
+        CFLAGS_FOR_TARGET="$TARGET_CFLAGS"      \
+        CXXFLAGS_FOR_TARGET="$TARGET_CXXFLAGS"  \
+    "${source_dir}"/configure                   \
+        --target="${OS_TRIPLET}"                \
+        --with-sysroot="${sysroot_dir}"         \
+        --prefix="${prefix}"                    \
+        --disable-werror                        \
+        --disable-nls                           \
+        --enable-languages=c,c++                \
+        --enable-default-pie                    \
+        --enable-shared
 }
 
 build() {

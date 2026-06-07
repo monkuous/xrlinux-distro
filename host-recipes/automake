@@ -3,10 +3,15 @@
 name=automake
 from_source=automake
 revision=1
+imagedeps="build-essential"
 hostdeps="autoconf"
 
 configure() {
-    "${source_dir}/configure" --prefix="${prefix}"
+        CFLAGS="$HOST_CFLAGS"       \
+        CXXFLAGS="$HOST_CXXFLAGS"   \
+        LDFLAGS="$HOST_LDFLAGS"     \
+    "${source_dir}/configure"       \
+        --prefix="${prefix}"
 }
 
 build() {
@@ -15,4 +20,7 @@ build() {
 
 package() {
     make -j"${parallelism}" DESTDIR="${dest_dir}" install
+
+        strip_command=strip \
+    post_package_strip
 }

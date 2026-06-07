@@ -1,26 +1,42 @@
 #! /bin/sh
 
 name=linux
-version=6.16.4
-tarball_url="https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.16.4.tar.xz"
-tarball_blake2b="251feef2f995c155850eac2fce5b89f37f39e9f13b6a4e6873370fdc69654692c6bf6c92f04ca7c0b5fd6088d74442afb68db71d2cc18691e23c61b0be714f34"
+version=6.16.0
+git_url="https://github.com/monkuous/xrlinux.git"
+commit="8a63f7825fadff4cc73193a6ac10bf2dde47dd1c"
 revision=1
-hostdeps="gcc-bootstrap"
+source_imagedeps="build-essential bc"
+source_hostdeps="gcc-bootstrap"
 imagedeps="build-essential bc"
+hostdeps="gcc-bootstrap"
+
+prepare() {
+    make -j"${parallelism}" ARCH="${JINX_ARCH}" CROSS_COMPILE="${OS_TRIPLET}-" mrproper
+    cp -p "${base_dir}/build-support/kernel-config.${JINX_ARCH}" .config
+    make -j"${parallelism}" ARCH="${JINX_ARCH}" CROSS_COMPILE="${OS_TRIPLET}-" olddefconfig
+}
 
 configure() {
     cp -pr "${source_dir}/." .
-    make -j"${parallelism}" ARCH="${JINX_ARCH}" CROSS_COMPILE="${TRIPLE}-" mrproper
-    make -j"${parallelism}" ARCH="${JINX_ARCH}" CROSS_COMPILE="${TRIPLE}-" defconfig
 }
 
 build() {
-    make -j"${parallelism}" ARCH="${JINX_ARCH}" CROSS_COMPILE="${TRIPLE}-"
+    make -j"${parallelism}" ARCH="${JINX_ARCH}" CROSS_COMPILE="${OS_TRIPLET}-"
 }
 
 package() {
     mkdir -p "${dest_dir}/boot"
-    cp -p arch/xr17032/boot/Image "${dest_dir}/boot/linux"
+
+    case "${JINX_ARCH}" in
+    xr17032)    cp -p arch/xr17032/boot/Image "${dest_dir}/boot/vmlinux" ;;
+    esac
+
+    make -j"${parallelism}"                     \
+        ARCH="${JINX_ARCH}"                     \
+        CROSS_COMPILE="${OS_TRIPLET}-"          \
+        INSTALL_MOD_PATH="${dest_dir}${prefix}" \
+        INSTALL_MOD_STRIP=1                     \
+        modules_install
 
     post_package_strip
 }

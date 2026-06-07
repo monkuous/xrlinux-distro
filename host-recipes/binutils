@@ -4,13 +4,18 @@ name=binutils
 from_source=binutils
 revision=1
 imagedeps="build-essential"
+hostdeps="pkg-config"
 
 configure() {
-    "${source_dir}"/configure               \
-            --prefix="${prefix}"            \
-            --target="${TRIPLE}"            \
-            --with-sysroot="${sysroot_dir}" \
-            --disable-nls
+        CFLAGS="$HOST_CFLAGS"           \
+        CXXFLAGS="$HOST_CXXFLAGS"       \
+        LDFLAGS="$HOST_LDFLAGS"         \
+    "${source_dir}/configure"           \
+        --target="${OS_TRIPLET}"        \
+        --with-sysroot="${sysroot_dir}" \
+        --prefix="${prefix}"            \
+        --disable-werror                \
+        --disable-nls
 }
 
 build() {
@@ -19,4 +24,7 @@ build() {
 
 package() {
     make -j"${parallelism}" DESTDIR="${dest_dir}" install
+
+        strip_command=strip \
+    post_package_strip
 }

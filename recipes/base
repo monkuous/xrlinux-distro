@@ -1,7 +1,7 @@
 #! /bin/sh
 
 name=base
+skip_pkg_check=yes
 version=0
 revision=1
-skip_pkg_check=yes
-deps="base-files bash core-libs coreutils init linux"
+deps="base-files linux core-libs bash coreutils util-linux"

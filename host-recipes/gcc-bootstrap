@@ -3,21 +3,26 @@
 name=gcc-bootstrap
 from_source=gcc
 revision=1
-hostrundeps="binutils"
 imagedeps="build-essential libgmp-dev libmpc-dev libmpfr-dev"
+hostrundeps="binutils"
 
 configure() {
-    "${source_dir}"/configure               \
-            --prefix="${prefix}"            \
-            --target="${TRIPLE}"            \
-            --with-sysroot="${sysroot_dir}" \
-            --disable-nls                   \
-            --enable-languages=c,c++        \
-            --enable-default-pie            \
-            --without-headers               \
-            --disable-shared                \
-            --disable-threads               \
-            --disable-hosted-libstdcxx
+        CFLAGS="$HOST_CFLAGS"                   \
+        CXXFLAGS="$HOST_CXXFLAGS"               \
+        LDFLAGS="$HOST_LDFLAGS"                 \
+        CFLAGS_FOR_TARGET="$TARGET_CFLAGS"      \
+        CXXFLAGS_FOR_TARGET="$TARGET_CXXFLAGS"  \
+    "${source_dir}"/configure                   \
+        --target="${OS_TRIPLET}"                \
+        --with-sysroot="${sysroot_dir}"         \
+        --prefix="${prefix}"                    \
+        --disable-werror                        \
+        --disable-nls                           \
+        --enable-languages=c,c++                \
+        --enable-default-pie                    \
+        --without-headers                       \
+        --disable-shared                        \
+        --disable-threads
 }
 
 build() {
@@ -26,4 +31,7 @@ build() {
 
 package() {
     make -j"${parallelism}" DESTDIR="${dest_dir}" inhibit_libc=true install-gcc install-target-libgcc
+
+        strip_command=strip \
+    post_package_strip
 }

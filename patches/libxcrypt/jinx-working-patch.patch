@@ -1,0 +1,11 @@
+diff -urN --no-dereference libxcrypt-clean/lib/libcrypt.minver libxcrypt-workdir/lib/libcrypt.minver
+--- libxcrypt-clean/lib/libcrypt.minver
++++ libxcrypt-workdir/lib/libcrypt.minver
+@@ -63,6 +63,7 @@
+ # Linux with GNU libc
+ GLIBC_2.36   linux.*gnu      loongarch64   __WORDSIZE == 64 && ULONG_MAX != UINT_MAX /* lp64* ABI */
+ GLIBC_2.35   linux.*gnu      or1k
++GLIBC_2.33   linux.*gnu      xr17032
+ GLIBC_2.33   linux.*gnu      riscv32
+ GLIBC_2.32   linux.*gnu      arc
+ GLIBC_2.29   linux.*gnu      csky

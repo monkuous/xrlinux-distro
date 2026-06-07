@@ -1,0 +1,15 @@
+#! /bin/sh
+
+name=gcc-libs
+version=0
+revision=1
+skip_pkg_check=yes
+imagedeps="build-essential"
+hostdeps="gcc"
+
+package() {
+    mkdir -p "$dest_dir$prefix"
+    cp -pr "$build_dir/host-pkgs/gcc/usr/local/$OS_TRIPLET/." "$dest_dir$prefix"
+
+    post_package_strip
+}

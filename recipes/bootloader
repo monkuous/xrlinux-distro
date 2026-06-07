@@ -1,12 +1,12 @@
 #! /bin/sh
 
 name=bootloader
+skip_pkg_check=yes
 version=0
 revision=1
-skip_pkg_check=yes
 source_dir=bootloader
+imagedeps="build-essential"
 hostdeps="gcc-bootstrap"
-imagedeps="build-essential cmake ninja-build"
 
 configure() {
     cmake_configure

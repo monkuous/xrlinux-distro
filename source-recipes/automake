@@ -8,6 +8,6 @@ hostdeps="autoconf"
 
 prepare() {
     for name in config.guess config.sub; do
-        cp -p /usr/local/share/autoconf/build-aux/"$name" lib
+        cp -p "/usr/local/share/autoconf/build-aux/$name" lib
     done
 }

@@ -3,13 +3,13 @@
 name=install-apt
 from_source=install-apt
 revision=1
-imagedeps="build-essential cmake ninja-build"
+imagedeps="build-essential"
 
 configure() {
-    cmake "${source_dir}"                                                     \
-        -G Ninja                                                              \
-        -DCMAKE_INSTALL_PREFIX="${prefix}"                                    \
-        -DCMAKE_BUILD_TYPE="${BUILD_TYPE}"
+    cmake "${source_dir}"                   \
+        -G Ninja                            \
+        -DCMAKE_INSTALL_PREFIX="${prefix}"  \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo
 }
 
 build() {
@@ -18,4 +18,7 @@ build() {
 
 package() {
     DESTDIR="${dest_dir}" cmake --install .
+
+        strip_command=strip \
+    post_package_strip
 }

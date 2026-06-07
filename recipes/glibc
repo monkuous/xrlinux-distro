@@ -5,24 +5,30 @@ version=2.42
 tarball_url="https://ftpmirror.gnu.org/glibc/glibc-2.42.tar.xz"
 tarball_blake2b="6ffabfe7942034a5a4fb5097679cb47bc3431eb2a3864af07cea0cb6aa5db63fbaf6f026b3c9299e00268058a6762eb21e92499f012d552ed87d65c7ffbd0bbe"
 revision=1
+imagedeps="build-essential"
 source_hostdeps="autoconf"
 hostdeps="gcc-bootstrap"
-imagedeps="build-essential"
 deps="linux-headers"
 
 prepare() {
-    cp -p /usr/local/share/autoconf/build-aux/config.sub scripts
+    for name in config.guess config.sub; do
+        cp -p "/usr/local/share/autoconf/build-aux/$name" scripts
+    done
 }
 
 configure() {
     cat > configparms << EOF
-rootsbindir=${prefix}/bin
+slibdir=${prefix}/lib
+rtlddir=${prefix}/lib
 sbindir=${prefix}/bin
+rootsbindir=${prefix}/bin
 EOF
-    autotools_configure                     \
-        --disable-nscd                      \
-        --enable-kernel=6.16                \
-        libc_cv_slibdir="${prefix}/lib"
+
+    autotools_configure         \
+        --enable-kernel=6.16    \
+        --disable-nscd          \
+        --disable-profile       \
+        --disable-timezone-tools
 }
 
 build() {
@@ -31,4 +37,6 @@ build() {
 
 package() {
     make -j"${parallelism}" DESTDIR="${dest_dir}" install
+
+    post_package_strip
 }

@@ -851,7 +851,7 @@ diff -urN --no-dereference glibc-clean/sysdeps/unix/sysv/linux/xr17032/sysdep.S 
 +	mov t1, long [t1 + %pcrel_lo(1b)]
 +	mov long [t1 + tp], a3
 +#else
-+	lui t1, %tprel_hi(errno)
++	lui t1, zero, %tprel_hi(errno)
 +	add t1, t1, tp
 +	mov long [t1 + %tprel_lo(errno)], a3
 +#endif

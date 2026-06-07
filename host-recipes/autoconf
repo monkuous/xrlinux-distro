@@ -2,10 +2,15 @@
 
 name=autoconf
 from_source=autoconf
+imagedeps="build-essential"
 revision=1
 
 configure() {
-    "${source_dir}/configure" --prefix="${prefix}"
+        CFLAGS="$HOST_CFLAGS"       \
+        CXXFLAGS="$HOST_CXXFLAGS"   \
+        LDFLAGS="$HOST_LDFLAGS"     \
+    "${source_dir}/configure"       \
+        --prefix="${prefix}"
 }
 
 build() {
@@ -14,4 +19,7 @@ build() {
 
 package() {
     make -j"${parallelism}" DESTDIR="${dest_dir}" install
+
+        strip_command=strip \
+    post_package_strip
 }

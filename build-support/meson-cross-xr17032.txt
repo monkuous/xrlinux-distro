@@ -1,0 +1,13 @@
+[binaries]
+c = 'xr17032-unknown-linux-gnu-gcc'
+cpp = 'xr17032-unknown-linux-gnu-g++'
+ar = 'xr17032-unknown-linux-gnu-ar'
+nm = 'xr17032-unknown-linux-gnu-nm'
+strip = 'xr17032-unknown-linux-gnu-strip'
+pkg-config = 'xr17032-unknown-linux-gnu-pkg-config'
+
+[host_machine]
+system = 'linux'
+cpu_family = 'xr17032'
+cpu = 'xr17032'
+endian = 'little'
